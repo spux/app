@@ -39,10 +39,19 @@
   import { h, html, Component, render } from 'https://unpkg.com/spux?module'
   console.log(di.data)
 
+  var Reducer = (a, t) =>
+    html`
+      ${a} ${' '}
+      ${typeof t === 'object'
+        ? html`
+            <a href="${t.text}">${t.text}</a>
+          `
+        : t}
+    `
   var Message = props =>
     html`
       <div>${props.from} <span>(${props.date})</span></div>
-      <div>${props.text[0]}</div>
+      <div>${props.text.reduce(Reducer)}</div>
     `
 
   const MessageList = messages => {
@@ -53,5 +62,5 @@
     `
   }
 
-  render(h(MessageList), document.body)
+  render(MessageList(), document.body)
 </script>
