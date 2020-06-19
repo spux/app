@@ -42,21 +42,13 @@
   var Message = props =>
     html`
       <div>${props.from} <span>(${props.date})</span></div>
-      <div>${props.text}</div>
+      <div>${props.text[0]}</div>
     `
 
   const MessageList = messages => {
     return html`
       <div>
-        ${di.data.map(message => {
-          return html`
-            <${Message}
-              from=${message.from}
-              date=${message.date}
-              text=${message.text[0]}
-            />
-          `
-        })}
+        ${di.data.map(Message)}
       </div>
     `
   }
