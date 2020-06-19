@@ -3,32 +3,26 @@
 <script type="application/ld+json" id="data">
   [
     {
-      "id": 123456,
+      "id": 62605,
       "type": "message",
-      "date": "2019-04-05T07:36:49",
+      "date": "2019-02-03T16:50:09",
       "edited": "1970-01-01T01:00:00",
-      "from": "Melvin Carvalho",
-      "from_id": 12345678,
-      "text": [
-        "Hi There",
-        {
-          "type": "link",
-          "text": "http://example.com"
-        }
-      ]
+      "from": "web r3",
+      "from_id": 663376464,
+      "text": "ping"
     },
     {
-      "id": 123457,
+      "id": 62606,
       "type": "message",
-      "date": "2019-04-05T08:36:49",
+      "date": "2019-02-03T16:50:14",
       "edited": "1970-01-01T01:00:00",
       "from": "Melvin Carvalho",
-      "from_id": 12345678,
+      "from_id": 97291900,
       "text": [
-        "What's Up?",
+        "pong?",
         {
           "type": "link",
-          "text": "http://example.com"
+          "text": "http://pong.example"
         }
       ]
     }
@@ -51,7 +45,9 @@
   var Message = props =>
     html`
       <div>${props.from} <span>(${props.date})</span></div>
-      <div>${props.text.reduce(Reducer)}</div>
+      <div>
+        ${Array.isArray(props.text) ? props.text.reduce(Reducer) : props.text}
+      </div>
     `
 
   const MessageList = messages => {
