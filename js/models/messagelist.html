@@ -48,16 +48,15 @@
   const MessageList = messages => {
     return html`
       <div>
-        <${Message}
-          from=${di.data[0].from}
-          date=${di.data[0].date}
-          text=${di.data[0].text[0]}
-        />
-        <${Message}
-          from=${di.data[1].from}
-          date=${di.data[1].date}
-          text=${di.data[1].text[0]}
-        />
+        ${di.data.map(message => {
+          return html`
+            <${Message}
+              from=${message.from}
+              date=${message.date}
+              text=${message.text[0]}
+            />
+          `
+        })}
       </div>
     `
   }
