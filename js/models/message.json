@@ -1,0 +1,15 @@
+{
+  "id": 123456,
+  "type": "message",
+  "date": "2019-04-05T07:36:49",
+  "edited": "1970-01-01T01:00:00",
+  "from": "Melvin Carvalho",
+  "from_id": 12345678,
+  "text": [
+    "Text and 'string'",
+    {
+      "type": "link",
+      "text": "http://example.com"
+    }
+  ]
+}
