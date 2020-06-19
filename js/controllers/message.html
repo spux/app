@@ -1,0 +1,35 @@
+<title>Spux App Message</title>
+<link rel="stylesheet" href="https://spux.org/css/spux.css" />
+<script type="application/ld+json" id="data">
+  {
+    "id": 123456,
+    "type": "message",
+    "date": "2019-04-05T07:36:49",
+    "edited": "1970-01-01T01:00:00",
+    "from": "Melvin Carvalho",
+    "from_id": 12345678,
+    "text": [
+      "Hi There",
+      {
+        "type": "link",
+        "text": "http://example.com"
+      }
+    ]
+  }
+</script>
+<script type="module">
+  import 'https://unpkg.com/dataisland?module'
+  import { h, html, Component, render } from 'https://unpkg.com/spux?module'
+  console.log(di.data)
+
+  const App = props => {
+    return html`
+      <div>
+        <div>${di.data.from} <span>(${di.data.date})</span></div>
+        <div>${di.data.text[0]}</div>
+      </div>
+    `
+  }
+
+  render(h(App), document.body)
+</script>
