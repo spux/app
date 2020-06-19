@@ -52,8 +52,17 @@
 
   const MessageList = messages => {
     return html`
-      <div>
-        ${di.data.map(Message)}
+      <div class="row">
+        <div class="col 2"></div>
+        <div class="col 10 w-100">
+          <div class="row card bold">
+            Saved Messages
+          </div>
+          <div class="row">
+            ${di.data.map(Message)}
+            <input class="card w-100" autofocus />
+          </div>
+        </div>
       </div>
     `
   }
