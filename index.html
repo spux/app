@@ -44,9 +44,12 @@
     `
   var Message = props =>
     html`
-      <div>${props.from} <span>(${props.date})</span></div>
+      <div>${props.from}</div>
       <div>
         ${Array.isArray(props.text) ? props.text.reduce(Reducer) : props.text}
+        <sub style="color: grey; font-size: 10px; padding-left: 10px">
+          ${props.date.substring(11, 16)}</sub
+        >
       </div>
     `
 
