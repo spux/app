@@ -1,0 +1,78 @@
+<title>Spux App Message</title>
+<link rel="stylesheet" href="https://spux.org/css/spux.css" />
+<script type="application/ld+json" id="data">
+  [
+    {
+      "id": 62605,
+      "type": "message",
+      "date": "2019-02-03T16:50:09",
+      "edited": "1970-01-01T01:00:00",
+      "from": "web r3",
+      "from_id": 663376464,
+      "text": "ping"
+    },
+    {
+      "id": 62606,
+      "type": "message",
+      "date": "2019-02-03T16:50:14",
+      "edited": "1970-01-01T01:00:00",
+      "from": "Melvin Carvalho",
+      "from_id": 97291900,
+      "text": [
+        "pong?",
+        {
+          "type": "link",
+          "text": "http://pong.example"
+        }
+      ]
+    }
+  ]
+</script>
+<script type="module">
+  import 'https://unpkg.com/dataisland?module'
+  import { h, html, Component, render } from 'https://unpkg.com/spux?module'
+  console.log(di.data)
+
+  var Reducer = (a, t) =>
+    html`
+      ${a} ${' '}
+      ${typeof t === 'object'
+        ? html`
+            <a href="${t.text}">${t.text}</a>
+          `
+        : t}
+    `
+  var Message = props =>
+    html`
+      <div>${props.from} <span>(${props.date})</span></div>
+      <div>
+        ${Array.isArray(props.text) ? props.text.reduce(Reducer) : props.text}
+      </div>
+    `
+
+  const MessageList = messages => {
+    return html`
+      <div class="row">
+        <div class="col 2">
+          <div class="row bold">
+            <input placeholder="search" class="card w-100" />
+          </div>
+          <div class="row p2">Saved Messages</div>
+        </div>
+        <div class="col 10 w-100">
+          <div class="row card bold">
+            ${user}
+          </div>
+          <div class="row">
+            ${di.data.map(Message)}
+            <input class="card w-100" autofocus />
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  globalThis.user = di.data[di.data.length - 1].from
+
+  render(MessageList(), document.body)
+</script>
