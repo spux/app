@@ -31,6 +31,7 @@
 <script type="module">
   import 'https://unpkg.com/dataisland?module'
   import { h, html, Component, render } from 'https://unpkg.com/spux?module'
+  import updateThis from 'https://unpkg.com/spux-modules@0.0.4/updatethis.js'
   console.log(di.data)
 
   var Reducer = (a, t) =>
@@ -77,7 +78,12 @@
           text: text
         }
         console.log(message)
-        di.data.push(message)
+        // di.data.push(message)
+        let messages = di.data
+        messages.push(message)
+        var island = document.getElementById('data')
+        document.getElementById('data').text = JSON.stringify(di.data, null, 2)
+        updateThis('data')
       }
     }
 
