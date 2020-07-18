@@ -1,123 +1,212 @@
-<title>Spux App</title>
+<script src="//cdn.jsdelivr.net/npm/fingerprintjs2/dist/fingerprint2.min.js"></script>
 <link rel="stylesheet" href="https://spux.org/css/spux.css" />
+
 <script type="application/ld+json" id="data">
-  [
-    {
-      "id": 62605,
-      "type": "message",
-      "date": "2019-02-03T16:50:09",
-      "edited": "1970-01-01T01:00:00",
-      "from": "web r3",
-      "from_id": 663376464,
-      "text": "ping"
+  {
+    "peerjs": {
+      "host": "melvincarvalho.com",
+      "port": "9000",
+      "path": "/tmp",
+      "iceServers": [{ "urls": ["stun:stun.l.google.com:19302"] }]
     },
-    {
-      "id": 62606,
-      "type": "message",
-      "date": "2019-02-03T16:50:14",
-      "edited": "1970-01-01T01:00:00",
-      "from": "Melvin Carvalho",
-      "from_id": 97291900,
-      "text": [
-        "pong?",
-        {
-          "type": "link",
-          "text": "http://pong.example"
-        }
-      ]
-    }
-  ]
+    "peerUri": "https://melvincarvalho.com:9000/tmp/peerjs/peers"
+  }
 </script>
+
+<script
+  type="application/json"
+  id="peer"
+  src="https://melvincarvalho.com:9000/tmp/peerjs/peers"
+></script>
+
+<script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
+
 <script type="module">
-  import 'https://unpkg.com/dataisland?module'
-  import { h, html, Component, render } from 'https://unpkg.com/spux?module'
-  import updateThis from 'https://unpkg.com/spux-modules@0.0.4/updatethis.js'
-  console.log(di.data)
+  import Navbar from 'https://unpkg.com/spux-components/Navbar.js'
+  import sha256 from 'https://brain-wallet.github.io/brain-wallet/web_modules/js-sha256.js'
 
-  var Reducer = (a, t) =>
-    html`
-      ${a} ${' '}
-      ${typeof t === 'object'
-        ? html`
-            <a href="${t.text}">${t.text}</a>
-          `
-        : t}
-    `
-  var Message = props =>
-    html`
-      <div>${props.from}</div>
-      <div>
-        ${Array.isArray(props.text) ? props.text.reduce(Reducer) : props.text}
-        <sub style="color: grey; font-size: 10px; padding-left: 10px">
-          ${props.date.substring(11, 16)}</sub
-        >
-      </div>
-    `
+  import { h, html, Component, render } from 'https://cdn.skypack.dev/spux'
+  import 'https://cdn.skypack.dev/dior'
+  var id
 
-  class MessageList extends Component {
+  function createPeer (id) {
+    var peer = new Peer('' + id, di.data.peerjs)
+    return peer
+  }
+
+  class App extends Component {
     constructor (props) {
       super(props)
-      this.handleChange = this.handleChange.bind(this)
-      this.setState({ text: '' })
+      this.state = {
+        status: 'empty',
+        peer: null,
+        messages: [],
+        connect: qs.peer || '',
+        message: 'hi!',
+        peers: []
+      }
+      this.connectToPeer = this.connectToPeer.bind(this)
+      this.sendMessage = this.sendMessage.bind(this)
+      this.updateConnect = this.updateConnect.bind(this)
+      this.updateMessage = this.updateMessage.bind(this)
+      this.handleRoster = this.handleRoster.bind(this)
     }
 
-    handleChange (e) {
-      let key = e.key
-      let text = e.target.value
-      if (e.key === 'Enter') {
-        console.log(e.key)
-        console.log(text)
-        this.setState({ text: '' })
-        console.log(this.state.text)
-        let message = {
-          id: Math.floor(Math.random() * 100000),
-          from: user,
-          date: new Date().toISOString(),
-          edited: '1970-01-01T01:00:00',
-          from_id: from_id,
-          text: text,
-          type: 'message'
-        }
-        console.log(message)
-        // di.data.push(message)
-        let messages = di.data
-        messages.push(message)
-        var island = document.getElementById('data')
-        document.getElementById('data').text = JSON.stringify(di.data, null, 2)
-        updateThis('data')
+    connectToPeer (e) {
+      var that = this
+      console.log('connecting to', this.state.connect)
+      var conn = this.state.peer.connect(this.state.connect) // who to connect to
+      conn.on('open', function () {
+        // when the connection is ready
+        that.setState({ status: 'Connection opened. Sent message' })
+        that.setState({ status: 'Try looking in the other window' })
+        conn.send(that.state.message)
+        that.pushMessage(id + ': ' + that.state.message)
+        that.setState({
+          message: ''
+        })
+      })
+    }
+
+    sendMessage (e) {
+      console.log('sending', this.state.connect)
+    }
+
+    pushMessage (str) {
+      this.setState({ messages: this.state.messages?.concat(str) })
+    }
+
+    updateConnect (evt) {
+      this.setState({
+        connect: evt.target.value
+      })
+    }
+
+    updateMessage (evt) {
+      // console.log(evt)
+      // console.log(evt.key)
+      // console.log(evt)
+      if (evt.key === 'Enter') {
+        this.connectToPeer(evt.target.value)
+      } else {
+        this.setState({
+          message: evt.target.value
+        })
       }
+    }
+
+    handleRoster (evt) {
+      console.log(evt.target.innerText)
+      this.setState({
+        connect: evt.target.innerText
+      })
+    }
+
+    componentDidMount () {
+      var that = this
+      console.log('ready')
+
+      Fingerprint2.get(components => {
+        console.log(components)
+        console.log('sha', sha256(JSON.stringify(components, null, 2)))
+
+        // id = qs.id || 'p' + Math.floor(Math.random() * 100)
+        id = sha256(JSON.stringify(components, null, 2)).substr(-8)
+
+        var peer = createPeer(id)
+
+        console.log('peer', peer)
+
+        peer.on('open', function (id) {
+          that.setState({ status: 'open' })
+        })
+
+        peer.on('connection', function (conn) {
+          console.log('Connected to remote peer', conn.peer)
+          that.setState({
+            connect: conn.peer
+          })
+
+          // this event is triggered when a connection
+          // has been established with a remote peer
+
+          // we can use the `conn` object to listen for data events
+          conn.on('open', function () {
+            conn.on('data', function (data) {
+              // data contains the received message
+              console.log(data)
+              that.pushMessage(that.state.connect + ': ' + data)
+            })
+          })
+        })
+
+        setTimeout(() => {
+          fetch('https://melvincarvalho.com:9000/tmp/peerjs/peers')
+            .then(response => response.json())
+            .then(data => {
+              that.setState({ peers: data })
+            })
+        }, 500)
+
+        that.setState({ status: 'created', peer: peer })
+      })
     }
 
     render () {
       return html`
+        <${Navbar} title="P2P" />
         <div class="row">
           <div class="col 2">
-            <div class="row bold">
-              <input placeholder="search" class="card w-100" />
-            </div>
-            <div class="row p2">Saved Messages</div>
-          </div>
-          <div class="col 10 w-100">
-            <div class="row card bold">
-              ${user}
-            </div>
-            <div class="row">
-              ${di.data.map(Message)}
-              <input
-                onKeyup="${this.handleChange}"
-                class="card w-100"
-                value=${this.state.text}
-                autofocus
+            <div>Status: ${this.state.status}</div>
+            <div>PeerID</div>
+            <div><strong>${this.state.peer?._id}</strong></div>
+            <div>
+              <label>Connect To Peer:</label><br /><input
+                id="connect"
+                value=${this.state.connect}
+                onChange="${this.updateConnect}"
               />
             </div>
+            <div>
+              <div>Online</div>
+              <hr />
+              ${this.state.peers
+                .filter(i => i !== this.state.peer?._id)
+                .map(i => {
+                  return html`
+                    <div key=${i} onClick=${this.handleRoster} class="card">
+                      ${i}
+                    </div>
+                  `
+                })}
+            </div>
+          </div>
+
+          <div
+            class="col 11"
+            style="border-left: 4px solid #D3D3D3; padding-left: 10px"
+          >
+            <div>Messages</div>
+            <hr />
+            ${this.state.messages?.map(
+              i =>
+                html`
+                  <div>${i}</div>
+                `
+            )}
+
+            <input
+              class="card w-100"
+              id="message"
+              value=${this.state.message}
+              onKeyup=${this.updateMessage}
+            />
           </div>
         </div>
       `
     }
   }
 
-  globalThis.user = di.data[di.data.length - 1].from
-  globalThis.from_id = di.data[di.data.length - 1].from_id
-
-  render(h(MessageList), document.body)
+  // main()
+  render(h(App), document.body)
 </script>
