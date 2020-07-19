@@ -61,7 +61,7 @@
         that.setState({ status: 'Connection opened. Sent message' })
         that.setState({ status: 'Try looking in the other window' })
         conn.send(that.state.message)
-        that.pushMessage({ text: that.state.message, id: id })
+        that.pushMessage(that.state.message, id })
         that.setState({
           message: ''
         })
@@ -138,7 +138,7 @@
             conn.on('data', function (data) {
               // data contains the received message
               console.log(data)
-              that.pushMessage({ text: data, id: that.state.connect })
+              that.pushMessage(text, that.state.connect )
             })
           })
         })
