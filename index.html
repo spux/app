@@ -75,7 +75,7 @@
     pushMessage (str, id) {
       id = id || 1
       this.setState({
-        messages: this.state.messages?.concat({ text: str, id: id })
+        messages: this.state.messages?.concat({ text: str, from_id: id })
       })
     }
 
@@ -199,7 +199,7 @@
             ${this.state.messages?.map(
               i =>
                 html`
-                  <div>${i.id}: ${i.text}</div>
+                  <div>${i.from_id}: ${i.text}</div>
                 `
             )}
 
