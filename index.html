@@ -145,9 +145,9 @@
             .then(response => response.json())
             .then(data => {
               that.setState({ peers: data })
-              if (peers.length === 2) {
+              if (data.length === 2) {
                 that.setState({
-                  connect: peers.filter(i => i !== this.state.peer?._id)[0]
+                  connect: data.filter(i => i !== this.state.peer?._id)[0]
                 })
               }
             })
