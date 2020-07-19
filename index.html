@@ -161,6 +161,29 @@
     }
 
     render () {
+      var Reducer = (a, t) =>
+        html`
+          ${a} ${' '}
+          ${typeof t === 'object'
+            ? html`
+                <a href="${t.text}">${t.text}</a>
+              `
+            : t}
+        `
+
+      var Message = props =>
+        html`
+          <div>${props.from_id}</div>
+          <div>
+            ${Array.isArray(props.text)
+              ? props.text.reduce(Reducer)
+              : props.text}
+            <sub style="color: grey; font-size: 10px; padding-left: 10px">
+              ${new Date().toISOString().substring(11, 16)}</sub
+            >
+          </div>
+        `
+
       return html`
         <${Navbar} title="P2P" />
         <div class="row">
@@ -199,7 +222,7 @@
             ${this.state.messages?.map(
               i =>
                 html`
-                  <div>${i.from_id}: ${i.text}</div>
+                  <${Message} from_id=${i.from_id} text=${i.text} />
                 `
             )}
 
