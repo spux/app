@@ -270,29 +270,35 @@
               >
                 <div>Messages</div>
                 <hr />
-                ${this.state.messages?.map(
-                  i =>
-                    html`
-                      <div>
-                        ${i.from_id} ${' : '}
-                        <${RichText} text=${i.text} />
-                        <sub
-                          style="color: grey; font-size: 10px; padding-left: 10px"
-                        >
-                          ${new Date().toISOString().substring(11, 16)}</sub
-                        >
-                      </div>
-                    `
-                )}
+                <div
+                  style="flex: 1; display: flex; flex-direction: column; overflow-y: scroll;"
+                >
+                  ${this.state.messages?.map(
+                    i =>
+                      html`
+                        <div>
+                          ${i.from_id} ${' : '}
+                          <${RichText} text=${i.text} />
+                          <sub
+                            style="color: grey; font-size: 10px; padding-left: 10px"
+                          >
+                            ${new Date().toISOString().substring(11, 16)}</sub
+                          >
+                        </div>
+                      `
+                  )}
+                </div>
 
-                <input
-                  class="card w-100"
-                  id="message"
-                  value=${this.state.message}
-                  onKeyup=${this.updateMessage}
-                  autofocus
-                  placeholder="Write a message..."
-                />
+                <div>
+                  <input
+                    class="card w-100"
+                    id="message"
+                    value=${this.state.message}
+                    onKeyup=${this.updateMessage}
+                    autofocus
+                    placeholder="Write a message..."
+                  />
+                </div>
               </div>
             </div>
           `
