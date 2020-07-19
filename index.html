@@ -2,6 +2,43 @@
   <head>
     <title>Spux Chat</title>
 
+    <style>
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      .main {
+        width: 100%;
+        height: 200px;
+        max-height: 200px;
+
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: column nowrap;
+        flex-flow: column nowrap;
+      }
+
+      .section {
+        width: 100%;
+        overflow-y: scroll;
+        background-color: red;
+        flex: 1 auto;
+        height: 100%;
+      }
+
+      .input {
+        width: 100%;
+        flex: 0 0 auto;
+        background-color: green;
+      }
+    </style>
+
     <script src="//cdn.jsdelivr.net/npm/fingerprintjs2/dist/fingerprint2.min.js"></script>
     <link rel="stylesheet" href="https://spux.org/css/spux.css" />
 
@@ -270,9 +307,7 @@
               >
                 <div>Messages</div>
                 <hr />
-                <div
-                  style="flex: 1; display: flex; flex-direction: column; overflow-y: scroll;"
-                >
+                <div class="main">
                   ${this.state.messages?.map(
                     i =>
                       html`
