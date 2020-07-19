@@ -42,7 +42,7 @@
         peer: null,
         messages: [],
         connect: qs.peer || '',
-        message: 'hi!',
+        message: '',
         peers: []
       }
       this.connectToPeer = this.connectToPeer.bind(this)
@@ -201,6 +201,7 @@
               value=${this.state.message}
               onKeyup=${this.updateMessage}
               autofocus
+              placeholder="Write a message..."
             />
           </div>
         </div>
