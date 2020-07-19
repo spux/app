@@ -222,7 +222,7 @@
             ${this.state.messages?.map(
               i =>
                 html`
-                  <div>${props.from_id}</div>
+                  <div>${i.from_id}</div>
                   <div>
                     ${Array.isArray(i.text) ? i.text.reduce(Reducer) : i.text}
                     <sub
