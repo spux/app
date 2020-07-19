@@ -277,7 +277,31 @@
             <div class="all">
               <${Navbar} title="Spux Chat" />
               <div class="row main">
-                <div class="col 2">
+                <div
+                  class="col 11"
+                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
+                >
+                  <div>Messages</div>
+                  <hr />
+                  <div class="message">
+                    ${this.state.messages?.map(
+                      i =>
+                        html`
+                          <div>
+                            ${i.from_id} ${' : '}
+                            <${RichText} text=${i.text} />
+                            <sub
+                              style="color: grey; font-size: 10px; padding-left: 10px"
+                            >
+                              ${new Date().toISOString().substring(11, 16)}</sub
+                            >
+                          </div>
+                        `
+                    )}
+                  </div>
+                </div>
+
+                <div class="col 1">
                   <div>Status: ${this.state.status}</div>
                   <div>PeerID</div>
                   <div><strong>${this.state.peer?._id}</strong></div>
@@ -304,30 +328,6 @@
                           </div>
                         `
                       })}
-                  </div>
-                </div>
-
-                <div
-                  class="col 11"
-                  style="border-left: 4px solid #D3D3D3; padding-left: 10px"
-                >
-                  <div>Messages</div>
-                  <hr />
-                  <div class="message">
-                    ${this.state.messages?.map(
-                      i =>
-                        html`
-                          <div>
-                            ${i.from_id} ${' : '}
-                            <${RichText} text=${i.text} />
-                            <sub
-                              style="color: grey; font-size: 10px; padding-left: 10px"
-                            >
-                              ${new Date().toISOString().substring(11, 16)}</sub
-                            >
-                          </div>
-                        `
-                    )}
                   </div>
                 </div>
               </div>
