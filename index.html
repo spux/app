@@ -222,7 +222,15 @@
             ${this.state.messages?.map(
               i =>
                 html`
-                  <${Message} from_id=${i.from_id} text=${i.text} />
+                  <div>${props.from_id}</div>
+                  <div>
+                    ${Array.isArray(i.text) ? i.text.reduce(Reducer) : i.text}
+                    <sub
+                      style="color: grey; font-size: 10px; padding-left: 10px"
+                    >
+                      ${new Date().toISOString().substring(11, 16)}</sub
+                    >
+                  </div>
                 `
             )}
 
