@@ -9,6 +9,19 @@
         box-sizing: border-box;
       }
 
+      .chatbox {
+        overflow: none;
+        position: relative;
+        width: 100%;
+        height: 400px;
+      }
+      .chatmessages {
+        overflow: auto;
+        position: absolute;
+        bottom: 0;
+        max-height: 400px;
+      }
+
       body {
         margin: 0;
       }
@@ -278,11 +291,10 @@
               <${Navbar} title="Spux Chat" />
               <div class="row ">
                 <div
-                  class="col 11"
+                  class="chatbox col 11"
                   style="border-right: 4px solid #D3D3D3; padding-right: 10px"
-                  style="overflow-y: scroll;"
                 >
-                  <div>Messages</div>
+                  <div class="chatmessages"></div>
                   <hr />
                   <div class="message">
                     ${this.state.messages?.map(
