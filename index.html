@@ -138,7 +138,7 @@
             conn.on('data', function (data) {
               // data contains the received message
               console.log(data)
-              that.pushMessage(text, that.state.connect)
+              that.pushMessage(data, that.state.connect)
             })
           })
         })
