@@ -61,7 +61,7 @@
         that.setState({ status: 'Connection opened. Sent message' })
         that.setState({ status: 'Try looking in the other window' })
         conn.send(that.state.message)
-        that.pushMessage(id + ': ' + that.state.message)
+        that.pushMessage({ text: that.state.message, id: id })
         that.setState({
           message: ''
         })
@@ -72,8 +72,11 @@
       console.log('sending', this.state.connect)
     }
 
-    pushMessage (str) {
-      this.setState({ messages: this.state.messages?.concat(str) })
+    pushMessage (str, id) {
+      id = id || 1
+      this.setState({
+        messages: this.state.messages?.concat({ text: str, id: id })
+      })
     }
 
     updateConnect (evt) {
@@ -135,7 +138,7 @@
             conn.on('data', function (data) {
               // data contains the received message
               console.log(data)
-              that.pushMessage(that.state.connect + ': ' + data)
+              that.pushMessage({ text: data, id: that.state.connect })
             })
           })
         })
@@ -196,7 +199,7 @@
             ${this.state.messages?.map(
               i =>
                 html`
-                  <div>${i}</div>
+                  <div>${i.id}: ${i.text}</div>
                 `
             )}
 
