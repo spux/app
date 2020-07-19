@@ -1,253 +1,262 @@
-<script src="//cdn.jsdelivr.net/npm/fingerprintjs2/dist/fingerprint2.min.js"></script>
-<link rel="stylesheet" href="https://spux.org/css/spux.css" />
+<html>
+  <head>
+    <title>Spux P2P Chat</title>
 
-<script type="application/ld+json" id="data">
-  {
-    "peerjs": {
-      "host": "melvincarvalho.com",
-      "port": "9000",
-      "path": "/tmp",
-      "iceServers": [{ "urls": ["stun:stun.l.google.com:19302"] }]
-    },
-    "peerUri": "https://melvincarvalho.com:9000/tmp/peerjs/peers"
-  }
-</script>
+    <script src="//cdn.jsdelivr.net/npm/fingerprintjs2/dist/fingerprint2.min.js"></script>
+    <link rel="stylesheet" href="https://spux.org/css/spux.css" />
 
-<script
-  type="application/json"
-  id="peer"
-  src="https://melvincarvalho.com:9000/tmp/peerjs/peers"
-></script>
-
-<script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
-
-<script type="module">
-  import Navbar from 'https://unpkg.com/spux-components/Navbar.js'
-  import sha256 from 'https://brain-wallet.github.io/brain-wallet/web_modules/js-sha256.js'
-
-  import { h, html, Component, render } from 'https://cdn.skypack.dev/spux'
-  import 'https://cdn.skypack.dev/dior'
-  var id
-
-  function createPeer (id) {
-    var peer = new Peer('' + id, di.data.peerjs)
-    return peer
-  }
-
-  class App extends Component {
-    constructor (props) {
-      super(props)
-      this.state = {
-        status: 'empty',
-        peer: null,
-        messages: [],
-        connect: qs.peer || '',
-        message: '',
-        peers: []
+    <script type="application/ld+json" id="data">
+      {
+        "peerjs": {
+          "host": "melvincarvalho.com",
+          "port": "9000",
+          "path": "/tmp",
+          "iceServers": [{ "urls": ["stun:stun.l.google.com:19302"] }]
+        },
+        "peerUri": "https://melvincarvalho.com:9000/tmp/peerjs/peers"
       }
-      this.connectToPeer = this.connectToPeer.bind(this)
-      this.sendMessage = this.sendMessage.bind(this)
-      this.updateConnect = this.updateConnect.bind(this)
-      this.updateMessage = this.updateMessage.bind(this)
-      this.handleRoster = this.handleRoster.bind(this)
-    }
+    </script>
 
-    connectToPeer (e) {
-      var that = this
-      console.log('connecting to', this.state.connect)
-      var conn = this.state.peer.connect(this.state.connect) // who to connect to
-      conn.on('open', function () {
-        // when the connection is ready
-        that.setState({ status: 'Connection opened. Sent message' })
-        that.setState({ status: 'Try looking in the other window' })
-        conn.send(that.state.message)
-        that.pushMessage(that.state.message, id)
-        that.setState({
-          message: ''
-        })
-      })
-    }
+    <script
+      type="application/json"
+      id="peer"
+      src="https://melvincarvalho.com:9000/tmp/peerjs/peers"
+    ></script>
 
-    sendMessage (e) {
-      console.log('sending', this.state.connect)
-    }
+    <script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
 
-    pushMessage (str, id) {
-      id = id || 1
-      this.setState({
-        messages: this.state.messages?.concat({ text: str, from_id: id })
-      })
-    }
+    <script type="module">
+      import Navbar from 'https://unpkg.com/spux-components/Navbar.js'
+      import sha256 from 'https://brain-wallet.github.io/brain-wallet/web_modules/js-sha256.js'
 
-    updateConnect (evt) {
-      this.setState({
-        connect: evt.target.value
-      })
-    }
+      import { h, html, Component, render } from 'https://cdn.skypack.dev/spux'
+      import 'https://cdn.skypack.dev/dior'
+      var id
 
-    updateMessage (evt) {
-      // console.log(evt)
-      // console.log(evt.key)
-      // console.log(evt)
-      if (evt.key === 'Enter') {
-        this.connectToPeer(evt.target.value)
-      } else {
-        this.setState({
-          message: evt.target.value
-        })
+      function createPeer (id) {
+        var peer = new Peer('' + id, di.data.peerjs)
+        return peer
       }
-    }
 
-    handleRoster (evt) {
-      console.log(evt.target.innerText)
-      this.setState({
-        connect: evt.target.innerText
-      })
-    }
+      class App extends Component {
+        constructor (props) {
+          super(props)
+          this.state = {
+            status: 'empty',
+            peer: null,
+            messages: [],
+            connect: qs.peer || '',
+            message: '',
+            peers: []
+          }
+          this.connectToPeer = this.connectToPeer.bind(this)
+          this.sendMessage = this.sendMessage.bind(this)
+          this.updateConnect = this.updateConnect.bind(this)
+          this.updateMessage = this.updateMessage.bind(this)
+          this.handleRoster = this.handleRoster.bind(this)
+        }
 
-    componentDidMount () {
-      var that = this
-      console.log('ready')
-
-      Fingerprint2.get(components => {
-        console.log(components)
-        console.log('sha', sha256(JSON.stringify(components, null, 2)))
-
-        // id = qs.id || 'p' + Math.floor(Math.random() * 100)
-        id = sha256(JSON.stringify(components, null, 2)).substr(-8)
-
-        var peer = createPeer(id)
-
-        console.log('peer', peer)
-
-        peer.on('open', function (id) {
-          that.setState({ status: 'open' })
-        })
-
-        peer.on('connection', function (conn) {
-          console.log('Connected to remote peer', conn.peer)
-          that.setState({
-            connect: conn.peer
-          })
-
-          // this event is triggered when a connection
-          // has been established with a remote peer
-
-          // we can use the `conn` object to listen for data events
+        connectToPeer (e) {
+          var that = this
+          console.log('connecting to', this.state.connect)
+          var conn = this.state.peer.connect(this.state.connect) // who to connect to
           conn.on('open', function () {
-            conn.on('data', function (data) {
-              // data contains the received message
-              console.log(data)
-              that.pushMessage(data, that.state.connect)
+            // when the connection is ready
+            that.setState({ status: 'Connection opened. Sent message' })
+            that.setState({ status: 'Try looking in the other window' })
+            conn.send(that.state.message)
+            that.pushMessage(that.state.message, id)
+            that.setState({
+              message: ''
             })
           })
-        })
+        }
 
-        setTimeout(() => {
-          fetch('https://melvincarvalho.com:9000/tmp/peerjs/peers')
-            .then(response => response.json())
-            .then(data => {
-              that.setState({ peers: data })
-              if (data.length === 2) {
-                that.setState({
-                  connect: data.filter(i => i !== this.state.peer?._id)[0]
-                })
-              }
+        sendMessage (e) {
+          console.log('sending', this.state.connect)
+        }
+
+        pushMessage (str, id) {
+          id = id || 1
+          this.setState({
+            messages: this.state.messages?.concat({ text: str, from_id: id })
+          })
+        }
+
+        updateConnect (evt) {
+          this.setState({
+            connect: evt.target.value
+          })
+        }
+
+        updateMessage (evt) {
+          // console.log(evt)
+          // console.log(evt.key)
+          // console.log(evt)
+          if (evt.key === 'Enter') {
+            this.connectToPeer(evt.target.value)
+          } else {
+            this.setState({
+              message: evt.target.value
             })
-        }, 500)
+          }
+        }
 
-        that.setState({ status: 'created', peer: peer })
-      })
-    }
+        handleRoster (evt) {
+          console.log(evt.target.innerText)
+          this.setState({
+            connect: evt.target.innerText
+          })
+        }
 
-    render () {
-      var Reducer = (a, t) =>
-        html`
-          ${a} ${' '}
-          ${typeof t === 'object'
-            ? html`
-                <a href="${t.text}">${t.text}</a>
-              `
-            : t}
-        `
+        componentDidMount () {
+          var that = this
+          console.log('ready')
 
-      var Message = props =>
-        html`
-          <div>${props.from_id}</div>
-          <div>
-            ${Array.isArray(props.text)
-              ? props.text.reduce(Reducer)
-              : props.text}
-            <sub style="color: grey; font-size: 10px; padding-left: 10px">
-              ${new Date().toISOString().substring(11, 16)}</sub
-            >
-          </div>
-        `
+          Fingerprint2.get(components => {
+            console.log(components)
+            console.log('sha', sha256(JSON.stringify(components, null, 2)))
 
-      return html`
-        <${Navbar} title="P2P" />
-        <div class="row">
-          <div class="col 2">
-            <div>Status: ${this.state.status}</div>
-            <div>PeerID</div>
-            <div><strong>${this.state.peer?._id}</strong></div>
-            <div>
-              <label>Connect To Peer:</label><br /><input
-                id="connect"
-                value=${this.state.connect}
-                onChange="${this.updateConnect}"
-              />
-            </div>
-            <div>
-              <div>Online</div>
-              <hr />
-              ${this.state.peers
-                .filter(i => i !== this.state.peer?._id)
-                .map(i => {
-                  return html`
-                    <div key=${i} onClick=${this.handleRoster} class="card">
-                      ${i}
-                    </div>
+            // id = qs.id || 'p' + Math.floor(Math.random() * 100)
+            id = sha256(JSON.stringify(components, null, 2)).substr(-8)
+
+            var peer = createPeer(id)
+
+            console.log('peer', peer)
+
+            peer.on('open', function (id) {
+              that.setState({ status: 'open' })
+            })
+
+            peer.on('connection', function (conn) {
+              console.log('Connected to remote peer', conn.peer)
+              that.setState({
+                connect: conn.peer
+              })
+
+              // this event is triggered when a connection
+              // has been established with a remote peer
+
+              // we can use the `conn` object to listen for data events
+              conn.on('open', function () {
+                conn.on('data', function (data) {
+                  // data contains the received message
+                  console.log(data)
+                  that.pushMessage(data, that.state.connect)
+                })
+              })
+            })
+
+            setTimeout(() => {
+              fetch('https://melvincarvalho.com:9000/tmp/peerjs/peers')
+                .then(response => response.json())
+                .then(data => {
+                  that.setState({ peers: data })
+                  if (data.length === 2) {
+                    that.setState({
+                      connect: data.filter(i => i !== this.state.peer?._id)[0]
+                    })
+                  }
+                })
+            }, 500)
+
+            that.setState({ status: 'created', peer: peer })
+          })
+        }
+
+        render () {
+          var Reducer = (a, t) =>
+            html`
+              ${a} ${' '}
+              ${typeof t === 'object'
+                ? html`
+                    <a href="${t.text}">${t.text}</a>
                   `
-                })}
+                : t}
+            `
+
+          var Message = props =>
+            html`
+              <div>${props.from_id}</div>
+              <div>
+                ${Array.isArray(props.text)
+                  ? props.text.reduce(Reducer)
+                  : props.text}
+                <sub style="color: grey; font-size: 10px; padding-left: 10px">
+                  ${new Date().toISOString().substring(11, 16)}</sub
+                >
+              </div>
+            `
+
+          return html`
+            <${Navbar} title="Spux P2P Chat" />
+            <div class="row">
+              <div class="col 2">
+                <div>Status: ${this.state.status}</div>
+                <div>PeerID</div>
+                <div><strong>${this.state.peer?._id}</strong></div>
+                <div>
+                  <label>Connect To Peer:</label><br /><input
+                    id="connect"
+                    value=${this.state.connect}
+                    onChange="${this.updateConnect}"
+                  />
+                </div>
+                <div>
+                  <div>Online</div>
+                  <hr />
+                  ${this.state.peers
+                    .filter(i => i !== this.state.peer?._id)
+                    .map(i => {
+                      return html`
+                        <div key=${i} onClick=${this.handleRoster} class="card">
+                          ${i}
+                        </div>
+                      `
+                    })}
+                </div>
+              </div>
+
+              <div
+                class="col 11"
+                style="border-left: 4px solid #D3D3D3; padding-left: 10px"
+              >
+                <div>Messages</div>
+                <hr />
+                ${this.state.messages?.map(
+                  i =>
+                    html`
+                      <div>
+                        ${i.from_id} ${' : '}
+                        ${Array.isArray(i.text)
+                          ? i.text.reduce(Reducer)
+                          : i.text}
+                        <sub
+                          style="color: grey; font-size: 10px; padding-left: 10px"
+                        >
+                          ${new Date().toISOString().substring(11, 16)}</sub
+                        >
+                      </div>
+                    `
+                )}
+
+                <input
+                  class="card w-100"
+                  id="message"
+                  value=${this.state.message}
+                  onKeyup=${this.updateMessage}
+                  autofocus
+                  placeholder="Write a message..."
+                />
+              </div>
             </div>
-          </div>
+          `
+        }
+      }
 
-          <div
-            class="col 11"
-            style="border-left: 4px solid #D3D3D3; padding-left: 10px"
-          >
-            <div>Messages</div>
-            <hr />
-            ${this.state.messages?.map(
-              i =>
-                html`
-                  <div>
-                    ${i.from_id} ${' : '}
-                    ${Array.isArray(i.text) ? i.text.reduce(Reducer) : i.text}
-                    <sub
-                      style="color: grey; font-size: 10px; padding-left: 10px"
-                    >
-                      ${new Date().toISOString().substring(11, 16)}</sub
-                    >
-                  </div>
-                `
-            )}
-
-            <input
-              class="card w-100"
-              id="message"
-              value=${this.state.message}
-              onKeyup=${this.updateMessage}
-              autofocus
-              placeholder="Write a message..."
-            />
-          </div>
-        </div>
-      `
-    }
-  }
-
-  // main()
-  render(h(App), document.body)
-</script>
+      // main()
+      render(h(App), document.body)
+    </script>
+  </head>
+  <body></body>
+</html>
