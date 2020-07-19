@@ -331,14 +331,16 @@
                   </div>
                 </div>
               </div>
-              <input
-                class="card w-100 input"
-                id="message"
-                value=${this.state.message}
-                onKeyup=${this.updateMessage}
-                autofocus
-                placeholder="Write a message..."
-              />
+              <div class="row">
+                <input
+                  class="card w-100 input"
+                  id="message"
+                  value=${this.state.message}
+                  onKeyup=${this.updateMessage}
+                  autofocus
+                  placeholder="Write a message..."
+                />
+              </div>
             </div>
           `
         }
