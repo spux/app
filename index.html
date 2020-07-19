@@ -187,7 +187,7 @@
               if (this.props.text.match(IMAGE_EXTENSIONS)) {
                 return html`
                   <div>
-                    <img src="{this.props.text}" />
+                    <img src="${this.props.text}" />
                   </div>
                 `
               } else if (this.props.text.match(VIDEO_EXTENSIONS)) {
@@ -197,7 +197,7 @@
                       controls
                       autoplay="true"
                       loop
-                      src="{this.props.text}"
+                      src="${this.props.text}"
                     />
                   </div>
                 `
@@ -208,15 +208,15 @@
                       controls
                       autoplay="true"
                       loop
-                      src="{this.props.text}"
+                      src="${this.props.text}"
                     />
                   </div>
                 `
               } else {
                 return html`
-                  <div>
+                  <span>
                     ${this.props.text}
-                  </div>
+                  </span>
                 `
               }
             }
