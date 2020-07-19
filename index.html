@@ -175,6 +175,53 @@
                 : t}
             `
 
+          class RichText extends Component {
+            constructor (props) {
+              super(props)
+            }
+            render () {
+              const AUDIO_EXTENSIONS = /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i
+              const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v|mkv)($|\?)/i
+              const IMAGE_EXTENSIONS = /\.(png|gif|bmp|svg|jpeg|jpg)($|\?)/i
+
+              if (this.props.text.match(IMAGE_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <img src="{this.props.text}" />
+                  </div>
+                `
+              } else if (this.props.text.match(VIDEO_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <video
+                      controls
+                      autoplay="true"
+                      loop
+                      src="{this.props.text}"
+                    />
+                  </div>
+                `
+              } else if (this.props.text.match(AUDIO_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <video
+                      controls
+                      autoplay="true"
+                      loop
+                      src="{this.props.text}"
+                    />
+                  </div>
+                `
+              } else {
+                return html`
+                  <div>
+                    ${this.props.text}
+                  </div>
+                `
+              }
+            }
+          }
+
           var Message = props =>
             html`
               <div>${props.from_id}</div>
@@ -228,9 +275,7 @@
                     html`
                       <div>
                         ${i.from_id} ${' : '}
-                        ${Array.isArray(i.text)
-                          ? i.text.reduce(Reducer)
-                          : i.text}
+                        <${RichText} text=${i.text} />
                         <sub
                           style="color: grey; font-size: 10px; padding-left: 10px"
                         >
