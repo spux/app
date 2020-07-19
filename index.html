@@ -232,13 +232,17 @@
               if (this.props.text.match(IMAGE_EXTENSIONS)) {
                 return html`
                   <div>
-                    <img src="${this.props.text}" />
+                    <img
+                      style="max-width: 500px; margin: auto;"
+                      src="${this.props.text}"
+                    />
                   </div>
                 `
               } else if (this.props.text.match(VIDEO_EXTENSIONS)) {
                 return html`
                   <div>
                     <video
+                      style="max-width: 500px; margin: auto;"
                       controls
                       autoplay="true"
                       loop
@@ -250,6 +254,7 @@
                 return html`
                   <div>
                     <video
+                      style="max-width: 500px; margin: auto;"
                       controls
                       autoplay="true"
                       loop
