@@ -8,9 +8,6 @@
       *:before {
         box-sizing: border-box;
       }
-      * {
-        min-height: 0;
-      }
 
       body {
         margin: 0;
@@ -104,7 +101,7 @@
           this.handleRoster = this.handleRoster.bind(this)
         }
 
-        connectToPeer (e) {
+        connectToPeer (message) {
           var that = this
           console.log('connecting to', this.state.connect)
           var conn = this.state.peer.connect(this.state.connect) // who to connect to
@@ -112,11 +109,8 @@
             // when the connection is ready
             that.setState({ status: 'Connection opened. Sent message' })
             that.setState({ status: 'Try looking in the other window' })
-            conn.send(that.state.message)
-            that.pushMessage(that.state.message, id)
-            that.setState({
-              message: ''
-            })
+            conn.send(message)
+            that.pushMessage(message, id)
           })
         }
 
@@ -143,6 +137,9 @@
           // console.log(evt)
           if (evt.key === 'Enter') {
             this.connectToPeer(evt.target.value)
+            that.setState({
+              message: ''
+            })
           } else {
             this.setState({
               message: evt.target.value
