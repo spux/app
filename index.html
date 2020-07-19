@@ -19,7 +19,7 @@
 
       .messages {
         overflow-y: scroll;
-        height: 84vh;
+        height: 82vh;
         display: flex;
         flex-direction: column-reverse;
       }
@@ -291,20 +291,25 @@
                   <div>Messages</div>
                   <hr />
                   <div class="messages">
-                    ${this.state.messages?.reverse().map(
-                      i =>
-                        html`
-                          <div>
-                            ${i.from_id} ${' : '}
-                            <${RichText} text=${i.text} />
-                            <sub
-                              style="color: grey; font-size: 10px; padding-left: 10px"
-                            >
-                              ${new Date().toISOString().substring(11, 16)}</sub
-                            >
-                          </div>
-                        `
-                    )}
+                    ${this.state.messages
+                      ?.slice()
+                      .reverse()
+                      .map(
+                        i =>
+                          html`
+                            <div>
+                              ${i.from_id} ${' : '}
+                              <${RichText} text=${i.text} />
+                              <sub
+                                style="color: grey; font-size: 10px; padding-left: 10px"
+                              >
+                                ${new Date()
+                                  .toISOString()
+                                  .substring(11, 16)}</sub
+                              >
+                            </div>
+                          `
+                      )}
                   </div>
                 </div>
 
