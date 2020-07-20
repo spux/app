@@ -308,7 +308,7 @@
 
           return html`
             <div class="all" style="min-height:0">
-              <${Navbar} title="Spux Chat" />
+              <${Navbar} title="Spux Chat (Alpha)" />
               <div class="row" style="height: 86vh; min-height:0">
                 <div
                   class="col 11"
@@ -320,6 +320,7 @@
                     ${this.state.messages
                       ?.slice()
                       .reverse()
+                      .filter(i => i.from_id === this.state.connect)
                       .map(
                         i =>
                           html`
