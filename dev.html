@@ -3,19 +3,41 @@
     <title>Spux Chat</title>
 
     <style>
-      *,
-      *:after,
-      *:before {
+      * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-
-      html {
+      html,
+      body {
         height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        margin: 8px;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+      }
+      .container {
+        flex: 1 1 90%;
+        display: flex;
+        flex-direction: column-reverse;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        overflow: auto;
+      }
+      .form {
+        flex: 0 0 32px;
+        display: flex;
+        border: 1px solid #ddd;
+      }
+      .form > input[type='text'] {
+        flex: 1 1 auto;
+        border: 1px solid #eee;
       }
 
       body {
-        margin: 0;
-        height: 100%;
         background: #e5ddd5;
       }
 
@@ -49,15 +71,17 @@
       }
 
       bubble::before {
+        // layout
         content: '';
         position: absolute;
         width: 0;
         height: 0;
         bottom: 100%;
-        left: 1.5em;
+        left: 1.5em; // offset should move with padding of parent
         border: 0.75rem solid transparent;
         border-top: none;
 
+        // looks
         border-bottom-color: #fff;
         filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
       }
@@ -68,16 +92,15 @@
 
       .messages {
         overflow-y: scroll;
-        height: 80vh;
         display: flex;
         flex-direction: column-reverse;
-        order: 2;
-        min-height: 0;
+
+        flex: 1 1 90%;
       }
 
       .main {
         width: 100%;
-        height: 80vh;
+        height: 86vh;
 
         display: -webkit-flex;
         display: flex;
@@ -379,17 +402,18 @@
           }
 
           return html`
-            <div class="all" style="min-height:0">
-              <div class="row" style="height: 86vh; min-height:0">
+            <div class="wrap" style="min-height:0">
+              <${Navbar} title="Spux Chat (Alpha)" />
+              <div class="container">
                 <div
                   class="col 11"
-                  style="border-right: 4px solid #D3D3D3; padding-right: 10px ; min-height:0"
+                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
                 >
                   <div>
                     ${store2('nicks')[this.state.connect] || 'All Messages'}
                   </div>
                   <hr />
-                  <div class="messages">
+                  <div class="">
                     ${this.state.messages
                       ?.slice()
                       .reverse()
@@ -420,11 +444,68 @@
                       )}
                   </div>
                 </div>
+
+                <div class="col 1">
+                  <div>Status: ${this.state.status}</div>
+                  <button
+                    title=${this.state.peer?._id}
+                    class="card w-100 info"
+                    onClick=${() => {
+                      var nick = prompt('Enter Nick')
+                      if (nick) {
+                        var nicks = store2('nicks')
+                        nicks[this.state.peer?._id] = nick
+                        store2('nicks', nicks)
+                      }
+                    }}
+                  >
+                    ${store2('nicks')[this.state.peer?._id] ||
+                      this.state.peer?._id}
+                  </button>
+                  <hr />
+                  <div>
+                    <label>Connect To Peer:</label><br /><input
+                      id="connect"
+                      value=${this.state.connect}
+                      onChange="${this.updateConnect}"
+                    />
+                  </div>
+                  <div>
+                    <hr />
+                    <button
+                      class="card w-100"
+                      onClick=${() => {
+                        console.log('clearing messages')
+                        store2('messages', [])
+                        this.setState({ messages: [] })
+                      }}
+                    >
+                      Clear history
+                    </button>
+                    <hr />
+                    <div>Online Peers</div>
+                    <hr />
+                    ${this.state.peers
+                      .filter(i => i !== this.state.peer?._id)
+                      .map(i => {
+                        return html`
+                          <button
+                            key=${i}
+                            title=${i}
+                            onClick=${this.handleRoster}
+                            class="card w-100"
+                          >
+                            ${store2('nicks')[i] || i}
+                          </button>
+                        `
+                      })}
+                  </div>
+                </div>
               </div>
 
-              <div class="row fixed-bottom" style="order: 3">
+              <div class="row form">
                 <input
-                  class="card w-100 input"
+                  class="card w-100 form"
                   id="message"
                   value=${this.state.message}
                   onKeyup=${this.updateMessage}
