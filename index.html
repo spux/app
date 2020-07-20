@@ -359,19 +359,6 @@
             }
           }
 
-          var Message = props =>
-            html`
-              <div>${store2('nicks')[props.from_id] || props.from_id}</div>
-              <div>
-                ${Array.isArray(props.text)
-                  ? props.text.reduce(Reducer)
-                  : props.text}
-                <sub style="color: grey; font-size: 10px; padding-left: 10px">
-                  ${new Date().toISOString().substring(11, 16)}</sub
-                >
-              </div>
-            `
-
           return html`
             <div class="all" style="min-height:0">
               <${Navbar} title="Spux Chat (Alpha)" />
@@ -397,7 +384,12 @@
                       .map(
                         i =>
                           html`
-                            <div class="bubble bubble-bottom-left">
+                            <div
+                              class="bubble bubble-bottom-left"
+                              sytle=${i.from_id === this.state.peer?._id
+                                ? 'background-color: white'
+                                : 'background-color: #DCF9C6 '}
+                            >
                               ${store2('nicks')[i.from_id] || i.from_id}
                               ${' : '}
                               <${RichText} text=${i.text} />
