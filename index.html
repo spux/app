@@ -83,13 +83,8 @@
       if (!store2('nicks')) store2('nicks', {})
 
       function notifyMe (str) {
-        // Let's check if the browser supports notifications
-        if (!('Notification' in window)) {
-          alert('This browser does not support desktop notification')
-        }
-
         // Let's check whether notification permissions have already been granted
-        else if (Notification.permission === 'granted') {
+        if (Notification.permission === 'granted') {
           // If it's okay let's create a notification
           var notification = new Notification(str)
         }
@@ -104,8 +99,9 @@
           })
         }
 
-        // At last, if the user has denied notifications, and you
-        // want to be respectful there is no need to bother them any more.
+        let src = './audio/ping.wav'
+        let audio = new Audio(src)
+        audio.play()
       }
 
       function createPeer (id) {
