@@ -19,15 +19,12 @@
 
       .messages {
         overflow-y: scroll;
-        height: 82vh;
         display: flex;
         flex-direction: column-reverse;
       }
 
       .main {
         width: 100%;
-        height: 86vh;
-
         display: -webkit-flex;
         display: flex;
         -webkit-flex-flow: column nowrap;
@@ -309,11 +306,8 @@
           return html`
             <div class="all" style="min-height:0">
               <${Navbar} title="Spux Chat" />
-              <div class="row" style="height: 86vh; min-height:0">
-                <div
-                  class="col 11"
-                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
-                >
+              <div class="row" style="min-height:0">
+                <div class="col 11">
                   <div>All Messages</div>
                   <hr />
                   <div class="messages">
