@@ -1,0 +1,493 @@
+<html>
+  <head>
+    <title>Spux Chat</title>
+
+    <style>
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        height: 100%;
+        background: #e5ddd5;
+      }
+
+      .bubble {
+        // layout
+        position: relative;
+        max-width: 30em;
+
+        // looks
+        background-color: #fff;
+        padding: 1.125em 1.5em;
+        font-size: 1.25em;
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3),
+          0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);
+      }
+
+      .green-bubble {
+        background-color: #dcf9c6;
+        margin-left: 40px;
+      }
+      .white-bubble {
+        background-color: white;
+      }
+
+      bubble::before {
+        // layout
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        bottom: 100%;
+        left: 1.5em; // offset should move with padding of parent
+        border: 0.75rem solid transparent;
+        border-top: none;
+
+        // looks
+        border-bottom-color: #fff;
+        filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
+      }
+
+      .all {
+        height: 100vh;
+      }
+
+      .messages {
+        overflow-y: scroll;
+        height: 82vh;
+        display: flex;
+        flex-direction: column-reverse;
+        order: 2;
+      }
+
+      .main {
+        width: 100%;
+        height: 86vh;
+
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: column nowrap;
+        flex-flow: column nowrap;
+      }
+
+      .section {
+        width: 100%;
+        overflow-y: scroll;
+        flex: 1 auto;
+        height: 100%;
+      }
+
+      .input {
+        width: 100%;
+        flex: 0 0 auto;
+      }
+    </style>
+
+    <script src="./web_modules/fingerprint2.min.js"></script>
+    <link rel="stylesheet" href="./css/spux.css" />
+
+    <script type="application/ld+json" id="data">
+      {
+        "peerjs": {
+          "host": "melvincarvalho.com",
+          "port": "9000",
+          "path": "/tmp",
+          "iceServers": [{ "urls": ["stun:stun.l.google.com:19302"] }]
+        },
+        "peerUri": "https://melvincarvalho.com:9000/tmp/peerjs/peers"
+      }
+    </script>
+
+    <script
+      type="application/json"
+      id="peer"
+      src="https://melvincarvalho.com:9000/tmp/peerjs/peers"
+    ></script>
+
+    <script src="./web_modules/peerjs.min.js"></script>
+
+    <script type="module">
+      import Navbar from './web_modules/Navbar.js'
+      import sha256 from './web_modules/js-sha256.js'
+
+      import { h, html, Component, render } from './web_modules/spux.js'
+      import './web_modules/dior.js'
+      import store2 from './web_modules/store2.js'
+
+      var id
+
+      if (!store2('nicks')) store2('nicks', {})
+
+      function notifyMe (str) {
+        // Let's check whether notification permissions have already been granted
+        if (Notification.permission === 'granted') {
+          // If it's okay let's create a notification
+          var notification = new Notification(str)
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === 'granted') {
+              var notification = new Notification(str)
+            }
+          })
+        }
+
+        let src = './audio/ping.wav'
+        let audio = new Audio(src)
+        audio.play()
+      }
+
+      function createPeer (id) {
+        var peer = new Peer('' + id, di.data.peerjs)
+        return peer
+      }
+
+      class App extends Component {
+        constructor (props) {
+          super(props)
+          this.state = {
+            status: 'empty',
+            peer: null,
+            messages: store2('messages') || [],
+            connect: qs.peer || '',
+            message: '',
+            peers: []
+          }
+          this.connectToPeer = this.connectToPeer.bind(this)
+          this.sendMessage = this.sendMessage.bind(this)
+          this.updateConnect = this.updateConnect.bind(this)
+          this.updateMessage = this.updateMessage.bind(this)
+          this.handleRoster = this.handleRoster.bind(this)
+        }
+
+        connectToPeer (message) {
+          var that = this
+          console.log('connecting to', this.state.connect)
+          var conn = this.state.peer.connect(this.state.connect) // who to connect to
+          conn.on('open', function () {
+            // when the connection is ready
+            that.setState({ status: 'Connection opened. Sent message' })
+            that.setState({ status: 'Message Sent' })
+            conn.send(message)
+            that.pushMessage(message, that.state.peer?._id, that.state.connect)
+          })
+        }
+
+        sendMessage (e) {
+          console.log('sending', this.state.connect)
+        }
+
+        pushMessage (str, from_id, to_id) {
+          from_id = from_id || 1
+          var messages = this.state.messages?.concat({
+            text: str,
+            from_id: from_id,
+            to_id: to_id,
+            type: 'message',
+            date: new Date().toISOString(),
+            edited: new Date().toISOString()
+          })
+          store2('messages', messages)
+
+          this.setState({ messages: messages })
+        }
+
+        updateConnect (evt) {
+          this.setState({
+            connect: evt.target.value
+          })
+        }
+
+        updateMessage (evt) {
+          // console.log(evt)
+          // console.log(evt.key)
+          // console.log(evt)
+          if (evt.key === 'Enter') {
+            this.connectToPeer(evt.target.value)
+            this.setState({
+              message: ''
+            })
+          } else {
+            this.setState({
+              message: evt.target.value
+            })
+          }
+        }
+
+        handleRoster (evt) {
+          console.log(evt.target.title)
+          this.setState({
+            connect: evt.target.title
+          })
+          if (!store2('nicks')[evt.target.title]) {
+            var nick = prompt('Enter Nick')
+            if (nick) {
+              var nicks = store2('nicks')
+              nicks[evt.target.title] = nick
+              store2('nicks', nicks)
+            }
+          }
+        }
+
+        componentDidMount () {
+          var that = this
+          console.log('ready')
+
+          Fingerprint2.get(components => {
+            console.log(components)
+            console.log('sha', sha256(JSON.stringify(components, null, 2)))
+
+            // id = qs.id || 'p' + Math.floor(Math.random() * 100)
+            id = sha256(JSON.stringify(components, null, 2)).substr(-8)
+
+            var peer = createPeer(id)
+
+            console.log('peer', peer)
+
+            peer.on('open', function (id) {
+              that.setState({ status: 'connected' })
+            })
+
+            peer.on('connection', function (conn) {
+              console.log('Connected to remote peer', conn.peer)
+              that.setState({
+                connect: conn.peer
+              })
+
+              // this event is triggered when a connection
+              // has been established with a remote peer
+
+              // we can use the `conn` object to listen for data events
+              conn.on('open', function () {
+                conn.on('data', function (data) {
+                  // data contains the received message
+                  notifyMe(data)
+                  console.log(data)
+                  that.pushMessage(
+                    data,
+                    that.state.connect,
+                    that.state.peer?._id
+                  )
+                })
+              })
+            })
+
+            setTimeout(() => {
+              fetch('https://melvincarvalho.com:9000/tmp/peerjs/peers')
+                .then(response => response.json())
+                .then(data => {
+                  that.setState({ peers: data })
+                  if (data.length === 2) {
+                    that.setState({
+                      connect: data.filter(i => i !== this.state.peer?._id)[0]
+                    })
+                  }
+                })
+            }, 500)
+
+            that.setState({ status: 'disconnected', peer: peer })
+          })
+        }
+
+        render () {
+          var Reducer = (a, t) =>
+            html`
+              ${a} ${' '}
+              ${typeof t === 'object'
+                ? html`
+                    <a href="${t.text}">${t.text}</a>
+                  `
+                : t}
+            `
+
+          class RichText extends Component {
+            constructor (props) {
+              super(props)
+            }
+            render () {
+              const AUDIO_EXTENSIONS = /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i
+              const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v|mkv)($|\?)/i
+              const IMAGE_EXTENSIONS = /\.(png|gif|bmp|svg|jpeg|jpg)($|\?)/i
+
+              if (this.props.text.match(IMAGE_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <img
+                      style="max-width: 500px; margin: auto;"
+                      src="${this.props.text}"
+                    />
+                  </div>
+                `
+              } else if (this.props.text.match(VIDEO_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <video
+                      style="max-width: 500px; margin: auto;"
+                      controls
+                      autoplay="true"
+                      loop
+                      src="${this.props.text}"
+                    />
+                  </div>
+                `
+              } else if (this.props.text.match(AUDIO_EXTENSIONS)) {
+                return html`
+                  <div>
+                    <video
+                      style="max-width: 500px; margin: auto;"
+                      controls
+                      autoplay="true"
+                      loop
+                      src="${this.props.text}"
+                    />
+                  </div>
+                `
+              } else if (this.props.text.match(/^http/)) {
+                return html`
+                  <span
+                    ><a class="info" href=${this.props.text}>
+                      ${this.props.text}</a
+                    >
+                  </span>
+                `
+              } else {
+                return html`
+                  <span>
+                    ${this.props.text}
+                  </span>
+                `
+              }
+            }
+          }
+
+          return html`
+            <div class="all" style="min-height:0">
+              <${Navbar} title="Spux Chat (Alpha)" />
+              <div class="row" style="height: 86vh; min-height:0">
+                <div
+                  class="col 11"
+                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
+                >
+                  <div>
+                    ${store2('nicks')[this.state.connect] || 'All Messages'}
+                  </div>
+                  <hr />
+                  <div class="messages">
+                    ${this.state.messages
+                      ?.slice()
+                      .reverse()
+                      .filter(
+                        i =>
+                          !this.state.connect ||
+                          i.from_id === this.state.connect ||
+                          i.to_id === this.state.connect
+                      )
+                      .map(
+                        i =>
+                          html`
+                            <div
+                              class=${i.from_id === this.state.peer?._id
+                                ? 'green-bubble bubble'
+                                : 'white-bubble bubble'}
+                            >
+                              ${store2('nicks')[i.from_id] || i.from_id}
+                              ${' : '}
+                              <${RichText} text=${i.text} />
+                              <sub
+                                style="color: grey; font-size: 10px; padding-left: 10px"
+                              >
+                                ${i.date?.substring(11, 16)}</sub
+                              >
+                            </div>
+                          `
+                      )}
+
+                    <div class="row" style="order: 3">
+                      <input
+                        class="card w-100 input"
+                        id="message"
+                        value=${this.state.message}
+                        onKeyup=${this.updateMessage}
+                        autofocus
+                        placeholder="Write a message..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col 1">
+                  <div>Status: ${this.state.status}</div>
+                  <button
+                    title=${this.state.peer?._id}
+                    class="card w-100 info"
+                    onClick=${() => {
+                      var nick = prompt('Enter Nick')
+                      if (nick) {
+                        var nicks = store2('nicks')
+                        nicks[this.state.peer?._id] = nick
+                        store2('nicks', nicks)
+                      }
+                    }}
+                  >
+                    ${store2('nicks')[this.state.peer?._id] ||
+                      this.state.peer?._id}
+                  </button>
+                  <hr />
+                  <div>
+                    <label>Connect To Peer:</label><br /><input
+                      id="connect"
+                      value=${this.state.connect}
+                      onChange="${this.updateConnect}"
+                    />
+                  </div>
+                  <div>
+                    <hr />
+                    <button
+                      class="card w-100"
+                      onClick=${() => {
+                        console.log('clearing messages')
+                        store2('messages', [])
+                        this.setState({ messages: [] })
+                      }}
+                    >
+                      Clear history
+                    </button>
+                    <hr />
+                    <div>Online Peers</div>
+                    <hr />
+                    ${this.state.peers
+                      .filter(i => i !== this.state.peer?._id)
+                      .map(i => {
+                        return html`
+                          <button
+                            key=${i}
+                            title=${i}
+                            onClick=${this.handleRoster}
+                            class="card w-100"
+                          >
+                            ${store2('nicks')[i] || i}
+                          </button>
+                        `
+                      })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        }
+      }
+
+      // main()
+      render(h(App), document.body)
+    </script>
+  </head>
+  <body></body>
+</html>
