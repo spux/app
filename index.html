@@ -268,7 +268,9 @@
               } else if (this.props.text.match(/^http/)) {
                 return html`
                   <span
-                    ><a href=${this.props.text}> ${this.props.text}</a>
+                    ><a class="bg-success" href=${this.props.text}>
+                      ${this.props.text}</a
+                    >
                   </span>
                 `
               } else {
