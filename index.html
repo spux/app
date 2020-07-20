@@ -14,13 +14,13 @@
       }
 
       .all {
-        height: 100vh;
       }
 
       .messages {
         overflow-y: scroll;
         display: flex;
         flex-direction: column-reverse;
+        min-height: 0;
       }
 
       .main {
@@ -150,11 +150,11 @@
         }
 
         handleRoster (evt) {
-          console.log(evt.target.innerText)
+          console.log(evt.target)
           this.setState({
-            connect: evt.target.innerText
+            connect: evt.target.title
           })
-          if (!store2('nicks')[evt.target.innerText]) {
+          if (!store2('nicks')[evt.target.title]) {
             var nick = prompt('Enter Nick')
             if (nick) {
               var nicks = store2('nicks')
@@ -304,9 +304,9 @@
             `
 
           return html`
-            <div class="all" style="min-height:0">
+            <div class="all">
               <${Navbar} title="Spux Chat" />
-              <div class="row" style="min-height:0">
+              <div class="row">
                 <div class="col 11">
                   <div>All Messages</div>
                   <hr />
@@ -382,6 +382,7 @@
                             key=${i}
                             onClick=${this.handleRoster}
                             class="card w-100"
+                            title=${i}
                           >
                             ${store2('nicks')[i] || i}
                           </button>
