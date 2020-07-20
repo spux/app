@@ -337,7 +337,9 @@
                     <button
                       class="card w-100"
                       onClick=${() => {
-                        store2('messages', undefined)
+                        console.log('clearing messages')
+                        store2('messages', [])
+                        this.setState({ messages: [] })
                       }}
                     >
                       Clear history
