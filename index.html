@@ -15,6 +15,14 @@
         background: #e5ddd5;
       }
 
+      .fixed-bottom {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+      }
+
       .bubble {
         position: relative;
         max-width: 30em;
@@ -468,7 +476,10 @@
                 </div>
               </div>
 
-              <div class="row" style="position: absolute;bottom: 0;right: 0;">
+              <div
+                class="row fixed-bottom"
+                style="position: absolute;bottom: 0;right: 0;"
+              >
                 <input
                   class="card w-100 input"
                   id="message"
