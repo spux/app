@@ -370,7 +370,6 @@
 
           return html`
             <div class="all" style="min-height:0">
-              <${Navbar} title="Spux Chat (Alpha)" />
               <div class="row" style="height: 86vh; min-height:0">
                 <div
                   class="col 11"
@@ -409,76 +408,19 @@
                             </div>
                           `
                       )}
-
-                    <div class="row" style="order: 3">
-                      <input
-                        class="card w-100 input"
-                        id="message"
-                        value=${this.state.message}
-                        onKeyup=${this.updateMessage}
-                        autofocus
-                        placeholder="Write a message..."
-                      />
-                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="col 1">
-                  <div>Status: ${this.state.status}</div>
-                  <button
-                    title=${this.state.peer?._id}
-                    class="card w-100 info"
-                    onClick=${() => {
-                      var nick = prompt('Enter Nick')
-                      if (nick) {
-                        var nicks = store2('nicks')
-                        nicks[this.state.peer?._id] = nick
-                        store2('nicks', nicks)
-                      }
-                    }}
-                  >
-                    ${store2('nicks')[this.state.peer?._id] ||
-                      this.state.peer?._id}
-                  </button>
-                  <hr />
-                  <div>
-                    <label>Connect To Peer:</label><br /><input
-                      id="connect"
-                      value=${this.state.connect}
-                      onChange="${this.updateConnect}"
-                    />
-                  </div>
-                  <div>
-                    <hr />
-                    <button
-                      class="card w-100"
-                      onClick=${() => {
-                        console.log('clearing messages')
-                        store2('messages', [])
-                        this.setState({ messages: [] })
-                      }}
-                    >
-                      Clear history
-                    </button>
-                    <hr />
-                    <div>Online Peers</div>
-                    <hr />
-                    ${this.state.peers
-                      .filter(i => i !== this.state.peer?._id)
-                      .map(i => {
-                        return html`
-                          <button
-                            key=${i}
-                            title=${i}
-                            onClick=${this.handleRoster}
-                            class="card w-100"
-                          >
-                            ${store2('nicks')[i] || i}
-                          </button>
-                        `
-                      })}
-                  </div>
-                </div>
+              <div class="row" style="order: 3">
+                <input
+                  class="card w-100 input"
+                  id="message"
+                  value=${this.state.message}
+                  onKeyup=${this.updateMessage}
+                  autofocus
+                  placeholder="Write a message..."
+                />
               </div>
             </div>
           `
