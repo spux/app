@@ -330,11 +330,11 @@
                     ${this.state.messages
                       ?.slice()
                       .reverse()
-                      .filter(
-                        i =>
+                      .filter(i => {
+                        !that.state.connect ||
                           i.from_id === this.state.connect ||
                           i.to_id === this.state.connect
-                      )
+                      })
                       .map(
                         i =>
                           html`
