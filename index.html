@@ -322,7 +322,9 @@
                   class="col 11"
                   style="border-right: 4px solid #D3D3D3; padding-right: 10px"
                 >
-                  <div>All Messages</div>
+                  <div>
+                    ${store2('nicks')[this.state.connect] || 'All Messages'}
+                  </div>
                   <hr />
                   <div class="messages">
                     ${this.state.messages
