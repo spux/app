@@ -11,33 +11,38 @@
 
       body {
         margin: 0;
+        height: 100%;
         background: #e5ddd5;
       }
 
       .bubble {
+        // layout
         position: relative;
-        font-family: sans-serif;
-        font-size: 18px;
-        line-height: 24px;
-        width: 300px;
-        background: #fff;
-        border-radius: 40px;
-        padding: 24px;
-        text-align: center;
-        color: #000;
+        max-width: 30em;
+
+        // looks
+        background-color: #fff;
+        padding: 1.125em 1.5em;
+        font-size: 1.25em;
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3),
+          0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);
       }
 
-      .bubble-bottom-left:before {
+      bubble::before {
+        // layout
         content: '';
-        width: 0px;
-        height: 0px;
         position: absolute;
-        border-left: 24px solid #fff;
-        border-right: 12px solid transparent;
-        border-top: 12px solid #fff;
-        border-bottom: 20px solid transparent;
-        left: 32px;
-        bottom: -24px;
+        width: 0;
+        height: 0;
+        bottom: 100%;
+        left: 1.5em; // offset should move with padding of parent
+        border: 0.75rem solid transparent;
+        border-top: none;
+
+        // looks
+        border-bottom-color: #fff;
+        filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
       }
 
       .all {
