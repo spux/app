@@ -173,7 +173,7 @@
             console.log('peer', peer)
 
             peer.on('open', function (id) {
-              that.setState({ status: 'open' })
+              that.setState({ status: 'connected' })
             })
 
             peer.on('connection', function (conn) {
@@ -208,7 +208,7 @@
                 })
             }, 500)
 
-            that.setState({ status: 'created', peer: peer })
+            that.setState({ status: 'disconnected', peer: peer })
           })
         }
 
