@@ -114,7 +114,7 @@
             that.setState({ status: 'Connection opened. Sent message' })
             that.setState({ status: 'Message Sent' })
             conn.send(message)
-            that.pushMessage(message, id)
+            that.pushMessage(message, that.state.peer?._id, that.state.connect)
           })
         }
 
@@ -122,9 +122,13 @@
           console.log('sending', this.state.connect)
         }
 
-        pushMessage (str, id) {
-          id = id || 1
-          var messages = this.state.messages?.concat({ text: str, from_id: id })
+        pushMessage (str, from_id, to_id) {
+          from_id = from_id || 1
+          var messages = this.state.messages?.concat({
+            text: str,
+            from_id: from_id,
+            to_id: to_id
+          })
           store2('messages', messages)
 
           this.setState({ messages: messages })
@@ -200,7 +204,11 @@
                 conn.on('data', function (data) {
                   // data contains the received message
                   console.log(data)
-                  that.pushMessage(data, that.state.connect)
+                  that.pushMessage(
+                    data,
+                    that.state.connect,
+                    that.state.peer?._id
+                  )
                 })
               })
             })
@@ -323,7 +331,7 @@
                       .filter(
                         i =>
                           i.from_id === this.state.connect ||
-                          i.from_id === this.state.peer?._id
+                          i.to_id === this.state.connect
                       )
                       .map(
                         i =>
