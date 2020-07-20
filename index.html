@@ -320,7 +320,11 @@
                     ${this.state.messages
                       ?.slice()
                       .reverse()
-                      .filter(i => i.from_id === this.state.connect)
+                      .filter(
+                        i =>
+                          i.from_id === this.state.connect ||
+                          i.from_id === this.state.peer?._id
+                      )
                       .map(
                         i =>
                           html`
