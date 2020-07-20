@@ -80,6 +80,8 @@
 
       var id
 
+      if (!store2('nicks')) store2('nicks', {})
+
       function createPeer (id) {
         var peer = new Peer('' + id, di.data.peerjs)
         return peer
@@ -112,7 +114,7 @@
             that.setState({ status: 'Connection opened. Sent message' })
             that.setState({ status: 'Message Sent' })
             conn.send(message)
-            that.pushMessage(message, store2('nick') || id)
+            that.pushMessage(message, id)
           })
         }
 
@@ -285,7 +287,7 @@
 
           var Message = props =>
             html`
-              <div>${props.from_id}</div>
+              <div>${store2('nicks')[props.from_id] || props.from_id}</div>
               <div>
                 ${Array.isArray(props.text)
                   ? props.text.reduce(Reducer)
@@ -337,11 +339,14 @@
                     onClick=${() => {
                       var nick = prompt('Enter Nick')
                       if (nick) {
-                        store2('nick', nick)
+                        var nicks = store2('nicks')
+                        nicks[this.state.peer?._id] = nick
+                        store2('nicks', nicks)
                       }
                     }}
                   >
-                    ${store2('nick') || this.state.peer?._id}
+                    ${store2('nicks')[this.state.peer?._id] ||
+                      this.state.peer?._id}
                   </button>
                   <hr />
                   <div>
