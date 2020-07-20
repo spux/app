@@ -157,6 +157,14 @@
           this.setState({
             connect: evt.target.innerText
           })
+          if (!store2('nicks')[evt.target.innerText]) {
+            var nick = prompt('Enter Nick')
+            if (nick) {
+              var nicks = store2('nicks')
+              nicks[evt.target.innerText] = nick
+              store2('nicks', nicks)
+            }
+          }
         }
 
         componentDidMount () {
