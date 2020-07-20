@@ -333,6 +333,16 @@
                     />
                   </div>
                   <div>
+                    <hr />
+                    <button
+                      class="card w-100"
+                      onClick=${() => {
+                        store2('messages', undefined)
+                      }}
+                    >
+                      Clear history
+                    </button>
+                    <hr />
                     <div>Online</div>
                     <hr />
                     ${this.state.peers
