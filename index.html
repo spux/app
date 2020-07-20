@@ -112,7 +112,7 @@
             that.setState({ status: 'Connection opened. Sent message' })
             that.setState({ status: 'Message Sent' })
             conn.send(message)
-            that.pushMessage(message, id)
+            that.pushMessage(message, store2('nick') || id)
           })
         }
 
@@ -331,9 +331,17 @@
 
                 <div class="col 1">
                   <div>Status: ${this.state.status}</div>
-                  <div>PeerID</div>
-                  <button class="card w-100">
-                    <strong>${this.state.peer?._id}</strong>
+                  <button
+                    title=${this.state.peer?._id}
+                    class="card w-100 info"
+                    onClick=${() => {
+                      var nick = prompt('Enter Nick')
+                      if (nick) {
+                        store2('nick', nick)
+                      }
+                    }}
+                  >
+                    ${store2('nick') || this.state.peer?._id}
                   </button>
                   <hr />
                   <div>
