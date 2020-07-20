@@ -110,7 +110,7 @@
           conn.on('open', function () {
             // when the connection is ready
             that.setState({ status: 'Connection opened. Sent message' })
-            that.setState({ status: 'Try looking in the other window' })
+            that.setState({ status: 'Message Sent' })
             conn.send(message)
             that.pushMessage(message, id)
           })
@@ -348,7 +348,7 @@
                       Clear history
                     </button>
                     <hr />
-                    <div>Online</div>
+                    <div>Online Peers</div>
                     <hr />
                     ${this.state.peers
                       .filter(i => i !== this.state.peer?._id)
