@@ -351,13 +351,13 @@
                       .filter(i => i !== this.state.peer?._id)
                       .map(i => {
                         return html`
-                          <div
+                          <button
                             key=${i}
                             onClick=${this.handleRoster}
-                            class="card"
+                            class="card w-100"
                           >
                             ${i}
-                          </div>
+                          </button>
                         `
                       })}
                   </div>
