@@ -9,6 +9,10 @@
         box-sizing: border-box;
       }
 
+      html {
+        height: 100%;
+      }
+
       body {
         margin: 0;
         height: 100%;
@@ -16,13 +20,12 @@
       }
 
       .bubble {
-        // layout
         position: relative;
         max-width: 30em;
 
-        // looks
         background-color: #fff;
-        padding: 1.125em 1.5em;
+        padding: 1em 1.25em;
+        margin: 0.2em 0.4em;
         font-size: 1.25em;
         border-radius: 1rem;
         box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3),
@@ -38,17 +41,15 @@
       }
 
       bubble::before {
-        // layout
         content: '';
         position: absolute;
         width: 0;
         height: 0;
         bottom: 100%;
-        left: 1.5em; // offset should move with padding of parent
+        left: 1.5em;
         border: 0.75rem solid transparent;
         border-top: none;
 
-        // looks
         border-bottom-color: #fff;
         filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
       }
@@ -59,10 +60,11 @@
 
       .messages {
         overflow-y: scroll;
-        height: 82vh;
+        height: 80vh;
         display: flex;
         flex-direction: column-reverse;
         order: 2;
+        min-height: 0;
       }
 
       .main {
@@ -373,7 +375,7 @@
               <div class="row" style="height: 86vh; min-height:0">
                 <div
                   class="col 11"
-                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
+                  style="border-right: 4px solid #D3D3D3; padding-right: 10px ; min-height:0"
                 >
                   <div>
                     ${store2('nicks')[this.state.connect] || 'All Messages'}
