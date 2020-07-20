@@ -316,7 +316,7 @@
                         i =>
                           html`
                             <div>
-                              ${store2('nicks')[props.from_id] || props.from_id}
+                              ${store2('nicks')[i.from_id] || i.from_id}
                               ${' : '}
                               <${RichText} text=${i.text} />
                               <sub
