@@ -29,6 +29,14 @@
           0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);
       }
 
+      .green-bubble {
+        background-color: #dcf9c6;
+        padding-left: 40px;
+      }
+      .white-bubble {
+        background-color: white;
+      }
+
       bubble::before {
         // layout
         content: '';
@@ -385,10 +393,9 @@
                         i =>
                           html`
                             <div
-                              class="bubble bubble-bottom-left"
-                              style=${i.from_id === this.state.peer?._id
-                                ? 'background-color: #DCF9C6'
-                                : 'background-color: white; padding-left: 40px;'}
+                              class=${i.from_id === this.state.peer?._id
+                                ? 'green-bubble bubble'
+                                : 'white-bubble bubble'}
                             >
                               ${store2('nicks')[i.from_id] || i.from_id}
                               ${' : '}
