@@ -149,7 +149,10 @@
           var messages = this.state.messages?.concat({
             text: str,
             from_id: from_id,
-            to_id: to_id
+            to_id: to_id,
+            type: 'message',
+            date: new Date().toISOString(),
+            edited: new Date().toISOString()
           })
           store2('messages', messages)
 
