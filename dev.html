@@ -23,14 +23,11 @@
         flex: 1 1 90%;
         display: flex;
         flex-direction: column-reverse;
-        background-color: #eee;
-        border: 1px solid #ccc;
         overflow: auto;
       }
       .form {
         flex: 0 0 32px;
         display: flex;
-        border: 1px solid #ddd;
       }
       .form > input[type='text'] {
         flex: 1 1 auto;
@@ -404,7 +401,7 @@
           return html`
             <div class="wrap" style="min-height:0">
               <${Navbar} title="Spux Chat (Alpha)" />
-              <div class="container">
+              <div class="container row">
                 <div
                   class="col 11"
                   style="border-right: 4px solid #D3D3D3; padding-right: 10px"
