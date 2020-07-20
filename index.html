@@ -324,7 +324,9 @@
                 <div class="col 1">
                   <div>Status: ${this.state.status}</div>
                   <div>PeerID</div>
-                  <div><strong>${this.state.peer?._id}</strong></div>
+                  <button class="card w-100">
+                    <strong>${this.state.peer?._id}</strong>
+                  </button>
                   <div>
                     <label>Connect To Peer:</label><br /><input
                       id="connect"
