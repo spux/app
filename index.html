@@ -14,17 +14,20 @@
       }
 
       .all {
+        height: 100vh;
       }
 
       .messages {
         overflow-y: scroll;
+        height: 82vh;
         display: flex;
         flex-direction: column-reverse;
-        min-height: 0;
       }
 
       .main {
         width: 100%;
+        height: 86vh;
+
         display: -webkit-flex;
         display: flex;
         -webkit-flex-flow: column nowrap;
@@ -150,7 +153,7 @@
         }
 
         handleRoster (evt) {
-          console.log(evt.target)
+          console.log(evt.target.title)
           this.setState({
             connect: evt.target.title
           })
@@ -158,7 +161,7 @@
             var nick = prompt('Enter Nick')
             if (nick) {
               var nicks = store2('nicks')
-              nicks[evt.target.innerText] = nick
+              nicks[evt.target.title] = nick
               store2('nicks', nicks)
             }
           }
@@ -304,10 +307,13 @@
             `
 
           return html`
-            <div class="all">
+            <div class="all" style="min-height:0">
               <${Navbar} title="Spux Chat" />
-              <div class="row">
-                <div class="col 11">
+              <div class="row" style="height: 86vh; min-height:0">
+                <div
+                  class="col 11"
+                  style="border-right: 4px solid #D3D3D3; padding-right: 10px"
+                >
                   <div>All Messages</div>
                   <hr />
                   <div class="messages">
@@ -331,6 +337,20 @@
                             </div>
                           `
                       )}
+
+                    <div
+                      class="row"
+                      style="position: absolute;bottom: 0;right: 0;"
+                    >
+                      <input
+                        class="card w-100 input"
+                        id="message"
+                        value=${this.state.message}
+                        onKeyup=${this.updateMessage}
+                        autofocus
+                        placeholder="Write a message..."
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -380,9 +400,9 @@
                         return html`
                           <button
                             key=${i}
+                            title=${i}
                             onClick=${this.handleRoster}
                             class="card w-100"
-                            title=${i}
                           >
                             ${store2('nicks')[i] || i}
                           </button>
@@ -390,16 +410,6 @@
                       })}
                   </div>
                 </div>
-              </div>
-              <div class="row" style="position: absolute;bottom: 0;right: 0;">
-                <input
-                  class="card w-100 input"
-                  id="message"
-                  value=${this.state.message}
-                  onKeyup=${this.updateMessage}
-                  autofocus
-                  placeholder="Write a message..."
-                />
               </div>
             </div>
           `
