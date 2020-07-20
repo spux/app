@@ -76,6 +76,8 @@
 
       import { h, html, Component, render } from 'https://cdn.skypack.dev/spux'
       import 'https://cdn.skypack.dev/dior'
+      import store2 from './web_modules/store2.js'
+
       var id
 
       function createPeer (id) {
@@ -89,7 +91,7 @@
           this.state = {
             status: 'empty',
             peer: null,
-            messages: [],
+            messages: store2('messages') || [],
             connect: qs.peer || '',
             message: '',
             peers: []
@@ -120,9 +122,10 @@
 
         pushMessage (str, id) {
           id = id || 1
-          this.setState({
-            messages: this.state.messages?.concat({ text: str, from_id: id })
-          })
+          var messages = this.state.messages?.concat({ text: str, from_id: id })
+          store2('messages', messages)
+
+          this.setState({ messages: messages })
         }
 
         updateConnect (evt) {
