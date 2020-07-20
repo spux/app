@@ -331,7 +331,7 @@
                       ?.slice()
                       .reverse()
                       .filter(i => {
-                        !that.state.connect ||
+                        !this.state.connect ||
                           i.from_id === this.state.connect ||
                           i.to_id === this.state.connect
                       })
