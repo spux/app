@@ -45,7 +45,6 @@
       }
 
       bubble::before {
-        // layout
         content: '';
         position: absolute;
         width: 0;
@@ -55,7 +54,6 @@
         border: 0.75rem solid transparent;
         border-top: none;
 
-        // looks
         border-bottom-color: #fff;
         filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
       }
@@ -67,28 +65,11 @@
       .messages {
         min-height: 0px;
         overflow-y: scroll;
-        height: 85%;
+        height: 75%;
         display: flex;
         flex-direction: column-reverse;
         scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
         scrollbar-width: thin;
-      }
-
-      .main {
-        width: 100%;
-        height: 86vh;
-
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-flow: column nowrap;
-        flex-flow: column nowrap;
-      }
-
-      .section {
-        width: 100%;
-        overflow-y: scroll;
-        flex: 1 auto;
-        height: 100%;
       }
 
       .input {
@@ -476,10 +457,7 @@
                 </div>
               </div>
 
-              <div
-                class="row fixed-bottom"
-                style="position: absolute;bottom: 0;right: 0;"
-              >
+              <div class="row fixed-bottom">
                 <input
                   class="card w-100 input"
                   id="message"
