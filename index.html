@@ -65,8 +65,9 @@
       }
 
       .messages {
+        min-height: 0px;
         overflow-y: scroll;
-        height: 90%;
+        height: 75%;
         display: flex;
         flex-direction: column-reverse;
         scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
@@ -380,7 +381,7 @@
             <div class="all" style="min-height:0">
               <${Navbar} title="Spux Chat (Alpha)" />
               <div class="row" style="height: 86vh; min-height:0">
-                <div class="col 11">
+                <div style="min-height: 0px;" class="col 11">
                   <div>
                     ${store2('nicks')[this.state.connect] || 'All Messages'}
                   </div>
