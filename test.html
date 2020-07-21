@@ -4,12 +4,22 @@
     <link rel="stylesheet" href="./css/spux.css" />
 
     <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        margin-top: auto;
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
       }
+
+      body {
+        margin: 0;
+        height: 100%;
+        background: #e5ddd5;
+      }
+
+      .sidebar {
+        width: 150px;
+      }
+
       #container {
         display: flex;
         flex-direction: column;
@@ -23,6 +33,7 @@
         background-color: gray;
       }
       #container article {
+        width: 100%;
         flex: 1 1 auto;
         overflow-y: auto;
         min-height: 0px;
@@ -32,6 +43,7 @@
         justify-content: flex-start;
         scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
         scrollbar-width: thin;
+        justify-content: space-between;
       }
       #container footer {
         background-color: gray;
@@ -40,7 +52,7 @@
     <script defer>
       document.addEventListener('DOMContentLoaded', function (event) {
         console.log('DOM fully loaded and parsed')
-        var objDiv = document.getElementById('content')
+        var objDiv = document.getElementById('messages')
         objDiv.scrollTop = objDiv.scrollHeight
       })
     </script>
@@ -48,131 +60,143 @@
   <body>
     <section id="container">
       <header id="header">This is a header</header>
-      <article id="content">
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        With a lot of lines.
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-        <br />
-        This is the content that
-        <br />
-        With a lot of lines.
-        <br />
-      </article>
-      <footer id="footer">
-        <input placeholder="Write a message..." class="w-100" />
-      </footer>
+      <div class="conitainer" style="display:flex; flex-direction: row;">
+        <div class="sidebar">Sidebar</div>
+        <div class="messages" style="display:flex; flex: auto;">
+          <article id="content">
+            <div
+              id="messages"
+              style="display:flex; flex-direction: row; flex: auto;"
+            >
+              <div>
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                With a lot of lines.
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+                <br />
+                This is the content that
+                <br />
+                With a lot of lines.
+                <br />
+              </div>
+            </div>
+            <footer id="footer">
+              <input placeholder="Write a message..." class="w-100" />
+            </footer>
+          </article>
+        </div>
+      </div>
     </section>
   </body>
 </html>
