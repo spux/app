@@ -386,7 +386,7 @@
                     ${store2('nicks')[this.state.connect] || 'All Messages'}
                   </div>
                   <hr />
-                  <div class="messages">
+                  <div id="messages" class="messages">
                     ${this.state.messages
                       ?.slice()
                       .reverse()
