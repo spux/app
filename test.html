@@ -37,9 +37,12 @@
         background-color: gray;
       }
     </style>
-    <script>
-      var chatLog = document.querySelectorAll('#content')
-      chatLog[0].scrollTop = chatLog[0].scrollHeight
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function (event) {
+        console.log('DOM fully loaded and parsed')
+        var objDiv = document.getElementById('content')
+        objDiv.scrollTop = objDiv.scrollHeight
+      })
     </script>
   </head>
   <body>

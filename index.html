@@ -497,6 +497,13 @@
       // main()
       render(h(App), document.body)
     </script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function (event) {
+        console.log('DOM fully loaded and parsed')
+        var objDiv = document.getElementById('messages')
+        objDiv.scrollTop = objDiv.scrollHeight
+      })
+    </script>
   </head>
   <body></body>
 </html>
