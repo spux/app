@@ -126,7 +126,7 @@
           Notification.requestPermission().then(function (permission) {
             // If the user accepts, let's create a notification
             if (permission === 'granted') {
-              var notification = new Notification(JSON.stringify(str, 2, null))
+              var notification = new Notification(str)
             }
           })
         }
@@ -170,7 +170,11 @@
             var data = { type: 'message', text: message }
             console.log('sending data', data)
             conn.send(data)
-            that.pushMessage(message, that.state.peer?._id, that.state.connect)
+            that.pushMessage(
+              message.text,
+              that.state.peer?._id,
+              that.state.connect
+            )
           })
         }
 
@@ -182,7 +186,7 @@
           from_id = from_id || 1
           console.log('pushMessage', data)
           var messages = this.state.messages?.concat({
-            text: data.text,
+            text: data,
             from_id: from_id,
             to_id: to_id,
             type: 'message',
@@ -264,9 +268,9 @@
                 conn.on('data', function (data) {
                   // data contains the received message
                   notifyMe(data)
-                  console.log(data)
+                  console.log('received', data)
                   that.pushMessage(
-                    data,
+                    data.text,
                     that.state.connect,
                     that.state.peer?._id
                   )
