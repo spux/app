@@ -170,11 +170,7 @@
             var data = { type: 'message', text: message }
             console.log('sending data', data)
             conn.send(data)
-            that.pushMessage(
-              message.text,
-              that.state.peer?._id,
-              that.state.connect
-            )
+            that.pushMessage(message, that.state.peer?._id, that.state.connect)
           })
         }
 
