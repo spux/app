@@ -167,7 +167,9 @@
             // when the connection is ready
             that.setState({ status: 'Connection opened. Sent message' })
             that.setState({ status: 'Message Sent' })
-            conn.send(message)
+            var data = { type: 'message', text: message }
+            console.log('sending data', data)
+            conn.send(data)
             that.pushMessage(message, that.state.peer?._id, that.state.connect)
           })
         }
@@ -176,10 +178,11 @@
           console.log('sending', this.state.connect)
         }
 
-        pushMessage (str, from_id, to_id) {
+        pushMessage (data, from_id, to_id) {
           from_id = from_id || 1
+          console.log('pushMessage', data)
           var messages = this.state.messages?.concat({
-            text: str,
+            text: data.text,
             from_id: from_id,
             to_id: to_id,
             type: 'message',
