@@ -1,7 +1,6 @@
 <html>
   <head>
     <title>Spux Chat</title>
-
     <style>
       *,
       *:after,
@@ -12,15 +11,14 @@
       body {
         margin: 0;
         height: 100%;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
         background: #e5ddd5;
       }
 
       .fixed-bottom {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1030;
+        flex: 1 0;
       }
 
       .bubble {
@@ -58,24 +56,20 @@
         filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.1));
       }
 
-      .all {
-        height: 100vh;
+      .header {
+        flex: 1 0;
       }
 
       .messages {
         min-height: 0px;
         overflow-y: scroll;
-        max-height: 80vh;
-        display: flex;
         flex-direction: column-reverse;
         scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
         scrollbar-width: thin;
-        flex: auto;
       }
 
       .input {
         width: 100%;
-        flex: 0 0 auto;
       }
     </style>
 
@@ -141,6 +135,12 @@
         return peer
       }
 
+      const Header = () => {
+        return html`
+          <${Navbar} class="header" title="Spux Chat (Alpha)" />
+        `
+      }
+
       class App extends Component {
         constructor (props) {
           super(props)
@@ -157,6 +157,7 @@
           this.updateConnect = this.updateConnect.bind(this)
           this.updateMessage = this.updateMessage.bind(this)
           this.handleRoster = this.handleRoster.bind(this)
+          this.scrollElement = this.scrollElement.bind(this)
         }
 
         connectToPeer (message) {
@@ -291,7 +292,21 @@
           })
         }
 
+        scrollElement () {
+          // Store a 'this' ref, and
+          console.log('scrolling')
+          var _this = this
+          // wait for a paint before running scrollHeight dependent code.
+          window.requestAnimationFrame(function () {
+            var node = document.getElementById('messages')
+            if (node) {
+              node.scrollTop = node.scrollHeight
+            }
+          })
+        }
+
         render () {
+          this.scrollElement()
           var Reducer = (a, t) =>
             html`
               ${a} ${' '}
@@ -362,115 +377,146 @@
             }
           }
 
-          return html`
-            <div class="all" style="min-height:0">
-              <${Navbar} title="Spux Chat (Alpha)" />
-              <div class="row" style="height: 86vh; min-height:0">
-                <div style="min-height: 0px;" class="col 11">
-                  <div>
-                    ${store2('nicks')[this.state.connect] || 'All Messages'}
-                  </div>
-                  <hr />
-                  <div id="messages" class="messages">
-                    ${this.state.messages
-                      ?.slice()
-                      .reverse()
-                      .filter(
-                        i =>
-                          !this.state.connect ||
-                          i.from_id === this.state.connect ||
-                          i.to_id === this.state.connect
-                      )
-                      .map(
-                        i =>
-                          html`
-                            <div
-                              class=${i.from_id === this.state.peer?._id
-                                ? 'green-bubble bubble'
-                                : 'white-bubble bubble'}
-                            >
-                              ${store2('nicks')[i.from_id] || i.from_id}
-                              ${' : '}
-                              <${RichText} text=${i.text} />
-                              <sub
-                                style="color: grey; font-size: 10px; padding-left: 10px"
-                              >
-                                ${i.date?.substring(11, 16)}</sub
-                              >
-                            </div>
-                          `
-                      )}
-                  </div>
+          const Messages = () => {
+            return html`
+              <div style="min-height: 0px;" class="col 11">
+                <div>
+                  ${store2('nicks')[this.state.connect] || 'All Messages'}
                 </div>
-
-                <div class="col 1">
-                  <div>Status: ${this.state.status}</div>
-                  <button
-                    title=${this.state.peer?._id}
-                    class="card w-100 info"
-                    onClick=${() => {
-                      var nick = prompt('Enter Nick')
-                      if (nick) {
-                        var nicks = store2('nicks')
-                        nicks[this.state.peer?._id] = nick
-                        store2('nicks', nicks)
-                      }
-                    }}
-                  >
-                    ${store2('nicks')[this.state.peer?._id] ||
-                      this.state.peer?._id}
-                  </button>
-                  <hr />
-                  <div>
-                    <label>Connect To Peer:</label><br /><input
-                      id="connect"
-                      value=${this.state.connect}
-                      onChange="${this.updateConnect}"
-                    />
-                  </div>
-                  <div>
-                    <hr />
-                    <button
-                      class="card w-100"
-                      onClick=${() => {
-                        console.log('clearing messages')
-                        store2('messages', [])
-                        this.setState({ messages: [] })
-                      }}
-                    >
-                      Clear history
-                    </button>
-                    <hr />
-                    <div>Online Peers</div>
-                    <hr />
-                    ${this.state.peers
-                      .filter(i => i !== this.state.peer?._id)
-                      .map(i => {
-                        return html`
-                          <button
-                            key=${i}
-                            title=${i}
-                            onClick=${this.handleRoster}
-                            class="card w-100"
+                <hr />
+                <div>
+                  ${this.state.messages
+                    ?.slice()
+                    .filter(
+                      i =>
+                        !this.state.connect ||
+                        i.from_id === this.state.connect ||
+                        i.to_id === this.state.connect
+                    )
+                    .map(
+                      i =>
+                        html`
+                          <div
+                            class=${i.from_id === this.state.peer?._id
+                              ? 'green-bubble bubble'
+                              : 'white-bubble bubble'}
                           >
-                            ${store2('nicks')[i] || i}
-                          </button>
+                            ${store2('nicks')[i.from_id] || i.from_id} ${' : '}
+                            <${RichText} text=${i.text} />
+                            <sub
+                              style="color: grey; font-size: 10px; padding-left: 10px"
+                            >
+                              ${i.date?.substring(11, 16)}</sub
+                            >
+                          </div>
                         `
-                      })}
-                  </div>
+                    )}
                 </div>
               </div>
+            `
+          }
 
+          const Sidebar = () => {
+            return html`
+              <div class="col 1">
+                <div>Status: ${this.state.status}</div>
+                <button
+                  title=${this.state.peer?._id}
+                  class="card w-100 info"
+                  onClick=${() => {
+                    var nick = prompt('Enter Nick')
+                    if (nick) {
+                      var nicks = store2('nicks')
+                      nicks[this.state.peer?._id] = nick
+                      store2('nicks', nicks)
+                    }
+                  }}
+                >
+                  ${store2('nicks')[this.state.peer?._id] ||
+                    this.state.peer?._id}
+                </button>
+                <hr />
+                <div>
+                  <label>Connect To Peer:</label><br /><input
+                    id="connect"
+                    value=${this.state.connect}
+                    onChange="${this.updateConnect}"
+                  />
+                </div>
+                <div>
+                  <hr />
+                  <button
+                    class="card w-100"
+                    onClick=${() => {
+                      console.log('clearing messages')
+                      store2('messages', [])
+                      this.setState({ messages: [] })
+                    }}
+                  >
+                    Clear history
+                  </button>
+                  <hr />
+                  <div>Online Peers</div>
+                  <hr />
+                  ${this.state.peers
+                    .filter(i => i !== this.state.peer?._id)
+                    .map(i => {
+                      return html`
+                        <button
+                          key=${i}
+                          title=${i}
+                          onClick=${this.handleRoster}
+                          class="card w-100"
+                        >
+                          ${store2('nicks')[i] || i}
+                        </button>
+                      `
+                    })}
+                </div>
+              </div>
+            `
+          }
+
+          const Main = () => {
+            return html`
+              <div
+                class="messages"
+                id="messages"
+                style="height: 86vh; min-height:0"
+              >
+                <${Messages} />
+                <${Sidebar} />
+              </div>
+            `
+          }
+
+          const Footer = () => {
+            return html`
               <div class="row fixed-bottom">
                 <input
                   class="card w-100 input"
                   id="message"
                   value=${this.state.message}
-                  onKeyup=${this.updateMessage}
+                  onInput=${this.updateMessage}
                   autofocus
                   placeholder="Write a message..."
                 />
               </div>
+            `
+          }
+
+          return html`
+            <${Header} />
+            <${Main} />
+            <div class="row fixed-bottom">
+              <input
+                class="card w-100 input"
+                id="message"
+                value=${this.state.message}
+                onInput=${this.updateMessage}
+                autofocus
+                placeholder="Write a message..."
+              />
             </div>
           `
         }
