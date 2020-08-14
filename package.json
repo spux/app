@@ -1,0 +1,18 @@
+{
+  "name": "spux-app",
+  "version": "0.0.1",
+  "description": "spux app",
+  "main": "chat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spux/app.git"
+  },
+  "author": "Melvin Carvalho",
+  "bugs": {
+    "url": "https://github.com/spux/app/issues"
+  },
+  "homepage": "https://github.com/spux/app#readme"
+}
